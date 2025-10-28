@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typemaster Keyboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+            --primary: #FF6B35;
+            --secondary: #1A1F36;
+            --accent: #4ECDC4;
+            --light: #F8F9FA;
+            --dark: #2D3748;
+            --gray: #718096;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --gradient: linear-gradient(135deg, var(--primary) 0%, #FF8E53 100%);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Improved Header Styles */
+        .header {
+            background-color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .header.scrolled {
+            padding: 10px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            color: var(--primary);
+            font-weight: 900;
+            font-size: clamp(1.5rem, 4vw, 28px);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            margin-right: 10px;
+            transition: var(--transition);
+            width: clamp(30px, 8vw, 40px);
+            height: auto;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo:hover img {
+            transform: rotate(-5deg);
+        }
+
+        .pre-order-btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: clamp(10px, 3vw, 12px) clamp(15px, 4vw, 25px);
+            border-radius: 8px;
+            font-weight: 700;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+            cursor: pointer;
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+        }
+
+        .pre-order-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Improved Main Content Styles */
+        .main-content {
+            padding: clamp(100px, 15vw, 150px) 0 clamp(30px, 5vw, 50px);
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+
+        .col {
+            padding: 0 10px;
+            flex: 1 0 100%;
+        }
+
+        .col-md-6 {
+            flex: 0 0 100%;
+        }
+
+        .col-md-4 {
+            flex: 0 0 100%;
+        }
+
+        .col-md-3 {
+            flex: 0 0 100%;
+        }
+
+        .mb-5 {
+            margin-bottom: clamp(2rem, 5vw, 3rem);
+        }
+
+        .mb-4 {
+            margin-bottom: clamp(1rem, 3vw, 1.5rem);
+        }
+
+        .mt-5 {
+            margin-top: clamp(2rem, 5vw, 3rem);
+        }
+
+        .align-items-center {
+            align-items: center;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* Improved Typography */
+        .title {
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            font-weight: 900;
+            color: var(--secondary);
+            line-height: 1.1;
+            margin-bottom: clamp(15px, 3vw, 20px);
+            position: relative;
+            display: inline-block;
+        }
+
+        .title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: var(--gradient);
+            border-radius: 2px;
+            transition: width 0.3s ease-out;
+        }
+
+        .title:hover::after {
+            width: 120px;
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
+            color: var(--gray);
+            margin-bottom: clamp(20px, 4vw, 30px);
+            line-height: 1.6;
+        }
+
+        /* Improved Buttons */
+        .cta-btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: clamp(12px, 3vw, 15px) clamp(20px, 4vw, 30px);
+            border-radius: 8px;
+            font-weight: 700;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+            cursor: pointer;
+            display: inline-block;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            width: 100%;
+            max-width: 250px;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .release-date {
+            color: var(--gray);
+            font-weight: 600;
+            padding: clamp(10px, 3vw, 12px) clamp(15px, 4vw, 20px);
+            background: rgba(255, 107, 53, 0.1);
+            border-radius: 8px;
+            transition: var(--transition);
+            display: inline-block;
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            width: 100%;
+            max-width: 250px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .release-date:hover {
+            background: rgba(255, 107, 53, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: clamp(15px, 3vw, 20px);
+            gap: 15px;
+        }
+
+        /* Improved Images */
+        .product-image {
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            width: 100%;
+            height: auto;
+            display: block;
+            max-width: 100%;
+        }
+
+        .product-image:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .image-overlay {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .image-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0.7;
+            mix-blend-mode: multiply;
+            border-radius: 15px;
+            transition: var(--transition);
+            z-index: 1;
+        }
+
+        .image-overlay:hover::before {
+            opacity: 0.5;
+        }
+
+        .image-overlay img {
+            transition: var(--transition);
+            width: 100%;
+            height: auto;
+        }
+
+        .image-overlay:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Improved Feature Cards */
+        .feature-section {
+            margin-top: clamp(50px, 10vw, 100px);
+            padding: clamp(30px, 6vw, 50px) 0;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: clamp(20px, 4vw, 30px);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            height: 100%;
+            text-align: center;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .feature-icon {
+            width: clamp(60px, 15vw, 80px);
+            height: clamp(60px, 15vw, 80px);
+            margin: 0 auto clamp(15px, 3vw, 20px);
+            background: rgba(255, 107, 53, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover .feature-icon {
+            background: var(--gradient);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .feature-title {
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: clamp(10px, 2vw, 15px);
+        }
+
+        .feature-text {
+            color: var(--gray);
+            line-height: 1.6;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+        }
+
+        /* Improved Footer */
+        .footer {
+            text-align: center;
+            padding: clamp(20px, 5vw, 30px);
+            background: var(--secondary);
+            color: white;
+            margin-top: clamp(40px, 8vw, 80px);
+        }
+
+        .social-links {
+            margin-top: 15px;
+        }
+
+        .social-links a {
+            color: white;
+            margin: 0 clamp(5px, 2vw, 10px);
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            transition: var(--transition);
+            display: inline-block;
+        }
+
+        .social-links a:hover {
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .animate-fade-in-left {
+            animation: fadeInLeft 1s ease-out;
+        }
+
+        .animate-fade-in-right {
+            animation: fadeInRight 1s ease-out;
+        }
+
+        /* Enhanced Responsive Design */
+        @media (min-width: 576px) {
+            .btn-container {
+                flex-direction: row;
+                justify-content: flex-start;
+                align-items: center;
+            }
+            
+            .release-date {
+                margin-top: 0;
+                margin-left: 20px;
+                width: auto;
+            }
+            
+            .cta-btn {
+                width: auto;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .col-md-6 {
+                flex: 0 0 50%;
+            }
+            
+            .col-md-4 {
+                flex: 0 0 50%;
+            }
+            
+            .col-md-3 {
+                flex: 0 0 50%;
+            }
+            
+            .btn-container {
+                justify-content: flex-start;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .col-md-4 {
+                flex: 0 0 33.333%;
+            }
+            
+            .col-md-3 {
+                flex: 0 0 25%;
+            }
+            
+            .row {
+                margin: 0 -15px;
+            }
+            
+            .col {
+                padding: 0 15px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .container {
+                padding: 0 20px;
+            }
+        }
+
+        /* Mobile-specific improvements */
+        @media (max-width: 575px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .logo {
+                justify-content: center;
+            }
+            
+            .main-content {
+                text-align: center;
+            }
+            
+            .title::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .title:hover::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Touch device optimizations */
+        @media (hover: none) {
+            .product-image:hover,
+            .feature-card:hover,
+            .cta-btn:hover,
+            .pre-order-btn:hover,
+            .release-date:hover,
+            .logo:hover,
+            .social-links a:hover {
+                transform: none;
+            }
+            
+            .product-image:hover {
+                box-shadow: var(--shadow);
+            }
+            
+            .feature-card:hover {
+                box-shadow: var(--shadow);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo animate-fade-in-left">
+                    <img src="logo.jpg" alt="Typemaster Logo">
+                    <span>TYPEMASTER</span>
+                </div>
+                <button class="pre-order-btn animate-fade-in-right">
+                    PRE-ORDER NOW
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Hero Section -->
+            <div class="row align-items-center">
+                <div class="col col-md-6 mb-5 animate-fade-in-left">
+                    <h1 class="title">TYPEMASTER KEYBOARD</h1>
+                    <p class="subtitle">
+                        Improve your productivity and gaming without breaking the bank. 
+                        Upgrade to a high quality mechanical typing experience.
+                    </p>
+                    <div class="btn-container">
+                        <button class="cta-btn">
+                            PRE-ORDER NOW
+                        </button>
+                        <span class="release-date">
+                            RELEASE ON 5/27
+                        </span>
+                    </div>
+                </div>
+                <div class="col col-md-6 animate-fade-in-right">
+                    <img src="image-keyboard.jpg" alt="Typemaster Keyboard" class="product-image">
+                </div>
+            </div>
+
+            <!-- Product Showcase -->
+            <div class="row align-items-center mt-5">
+                <div class="col col-md-4 mb-4">
+                    <div class="image-overlay animate-fade-in-left">
+                        <img src="image-phone-and-keyboard.jpg" alt="Phone and Keyboard" class="product-image">
+                    </div>
+                </div>
+                <div class="col col-md-4 mb-4">
+                    <img src="image-glass-and-keyboard.jpg" alt="Glass and Keyboard" class="product-image animate-fade-in-up">
+                </div>
+                <div class="col col-md-4 animate-fade-in-right">
+                    <h2 class="title mb-4">MECHANICAL WIRELESS KEYBOARD</h2>
+                    <p class="subtitle">
+                        The Typemaster keyboard boasts top-notch build and practical design. 
+                        It offers a wide variety of switches and keycaps, along with reliable 
+                        wireless connectivity.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="feature-section">
+                <div class="row">
+                    <div class="col col-md-3 mb-4">
+                        <div class="feature-card animate-fade-in-up" style="animation-delay: 0.1s;">
+                            <div class="feature-icon">
+                                <i class="fas fa-desktop"></i>
+                            </div>
+                            <h3 class="feature-title">HIGH COMPATIBILITY</h3>
+                            <p class="feature-text">
+                                Easy to use and works well with all major computer brands, 
+                                gaming consoles and mobile devices. Plug & play, no installation 
+                                or driver needed.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col col-md-3 mb-4">
+                        <div class="feature-card animate-fade-in-up" style="animation-delay: 0.2s;">
+                            <div class="feature-icon">
+                                <i class="fas fa-bluetooth"></i>
+                            </div>
+                            <h3 class="feature-title">WIRELESS WITH BLUETOOTH</h3>
+                            <p class="feature-text">
+                                Powerful 2.4G RF technology allows you to connect the cordless 
+                                keyboard from up to 30ft away. Simply plug the unifying receiver 
+                                into your computer.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col col-md-3 mb-4">
+                        <div class="feature-card animate-fade-in-up" style="animation-delay: 0.3s;">
+                            <div class="feature-icon">
+                                <i class="fas fa-battery-full"></i>
+                            </div>
+                            <h3 class="feature-title">HIGH CAPACITY BATTERY</h3>
+                            <p class="feature-text">
+                                Equipped with long-lasting built-in battery, you'll never have 
+                                to spend a dime on replaceable ones. Enjoy 40 hours of usage 
+                                time between charges.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col col-md-3 mb-4">
+                        <div class="feature-card animate-fade-in-up" style="animation-delay: 0.4s;">
+                            <div class="feature-icon">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <h3 class="feature-title">RGB BACKLIT MODES</h3>
+                            <p class="feature-text">
+                                Choose from 4 backlight brightness levels and adjustable breathing 
+                                speed. Each key glows intensely in the dark and helps you type 
+                                in low light conditions.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <p>Typemaster 2024 | All Rights Reserved</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const elementsToAnimate = document.querySelectorAll('.animate-fade-in-up, .animate-fade-in-left, .animate-fade-in-right');
+            elementsToAnimate.forEach(el => {
+                el.style.opacity = '0';
+                if (el.classList.contains('animate-fade-in-up')) {
+                    el.style.transform = 'translateY(30px)';
+                } else if (el.classList.contains('animate-fade-in-left')) {
+                    el.style.transform = 'translateX(-30px)';
+                } else if (el.classList.contains('animate-fade-in-right')) {
+                    el.style.transform = 'translateX(30px)';
+                }
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
